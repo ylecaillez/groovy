@@ -18,6 +18,8 @@
  */
 package org.apache.groovy.parser.antlr4.internal.atnmanager;
 
+import static java.lang.Thread.interrupted;
+
 import org.antlr.v4.runtime.atn.ATN;
 import org.apache.groovy.util.SystemUtil;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
@@ -61,6 +63,8 @@ public abstract class AtnManager {
                         AtnWrapperSoftReference atnWrapperSoftReference = (AtnWrapperSoftReference) reference;
                         atnWrapperSoftReference.getAtnManager().getAtnWrapper(false).clearDFA();
                     }
+                } catch (InterruptedException __) {
+                    return;
                 } catch (Throwable t) {
                     Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
                     if (logger.isLoggable(Level.WARNING)) {

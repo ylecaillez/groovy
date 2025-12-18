@@ -18,6 +18,8 @@
  */
 package org.codehaus.groovy.vmplugin.v8;
 
+import static java.lang.Thread.interrupted;
+
 import org.apache.groovy.util.SystemUtil;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.memoize.MemoizeCache;
@@ -153,6 +155,8 @@ public class CacheableCallSite extends MutableCallSite {
             while (true) {
                 try {
                     CACHE_CLEANER_QUEUE.take().run();
+                } catch (InterruptedException __) {
+                    return;
                 } catch (Throwable ignore) {
                     Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
                     if (logger.isLoggable(Level.FINEST)) {
