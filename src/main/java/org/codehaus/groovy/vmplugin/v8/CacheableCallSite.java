@@ -18,6 +18,8 @@
  */
 package org.codehaus.groovy.vmplugin.v8;
 
+import static java.lang.Thread.interrupted;
+
 import org.apache.groovy.util.SystemUtil;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codehaus.groovy.runtime.memoize.MemoizeCache;
@@ -51,14 +53,14 @@ public class CacheableCallSite extends MutableCallSite {
     private MethodHandle defaultTarget;
     private MethodHandle fallbackTarget;
     private final Map<String, SoftReference<MethodHandleWrapper>> lruCache =
-            new LinkedHashMap<String, SoftReference<MethodHandleWrapper>>(INITIAL_CAPACITY, LOAD_FACTOR, true) {
-                private static final long serialVersionUID = 7785958879964294463L;
+        new LinkedHashMap<String, SoftReference<MethodHandleWrapper>>(INITIAL_CAPACITY, LOAD_FACTOR, true) {
+            private static final long serialVersionUID = 7785958879964294463L;
 
-                @Override
-                protected boolean removeEldestEntry(Map.Entry eldest) {
-                    return size() > CACHE_SIZE;
-                }
-            };
+            @Override
+            protected boolean removeEldestEntry(Map.Entry eldest) {
+                return size() > CACHE_SIZE;
+            }
+        };
 
     public CacheableCallSite(MethodType type, MethodHandles.Lookup lookup) {
         super(type);
